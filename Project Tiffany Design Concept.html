@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Tiffany</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: #0ABAB5;
+      --bg: #000;
+      --fg: #fff;
+      --ghost: #ffffff0a;
+    }
+    *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html,body {
+      height: 100%; overflow: hidden;
+      background: var(--bg); color: var(--fg);
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      cursor: none;
+    }
+    img, video { display: block; width: 100%; height: 100%; object-fit: cover; }
+    video { filter: grayscale(100%); }
+    video#omwVid { filter: none; }
+    /* cursor */
+    .cursor { position: fixed; top: 0; left: 0; width: 10px; height: 10px; border: 1px solid var(--fg); border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); transition: .15s ease; z-index: 10000; }
+    .cursor.hover { width: 40px; height: 40px; border-color: var(--accent); }
+    /* menu */
+    #menu-trigger { position: fixed; top: 2rem; left: 2rem; width: 8px; height: 8px; background: var(--fg); border-radius: 50%; z-index: 9000; cursor: pointer; transition: transform .3s ease; }
+    #menu-trigger:hover { transform: scale(4); }
+    nav#menu { position: fixed; top:0; left:0; width:0; height:100%; background: rgba(0,0,0,.6); backdrop-filter: blur(8px); overflow:hidden; transition: width .6s ease; z-index:8000; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2rem; }
+    nav#menu.open { width: 40vw; min-width:240px; }
+    nav#menu a { color: var(--fg); font-size: clamp(1.5rem,4vw,2.5rem); font-weight:700; text-decoration:none; transition: color .3s ease; }
+    nav#menu a:hover { color: var(--accent); }
+    /* wrapper */
+    .site-wrapper { 
+      display: flex; 
+      flex-direction: column; 
+      height: 100vh; 
+      width: 100%; 
+      overflow-y: auto; 
+      overflow-x: hidden; 
+      scroll-snap-type: y mandatory; 
+      scroll-behavior: smooth; 
+    }
+    .site-wrapper::-webkit-scrollbar { display:none; }
+    .panel { 
+      flex: 0 0 100vh; 
+      width: 100vw; 
+      scroll-snap-align: start; 
+      position: relative; 
+      padding: 10vh 5vw; 
+    }
+    /* video panel */
+    .panel.video { padding:0; }
+    .panel.video video { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; }
+    .panel.video .overlay { position:absolute; top:50%; left:50%; transform: translate(-50%, -50%); text-align:center; font-family: "Playfair Display", serif; pointer-events:none; }
+    .panel.video .overlay h2 { font-size: clamp(1.8rem,6vw,4rem); font-weight:100; }
+    .panel.video .overlay span { font-size: clamp(0.8rem,2vw,1.1rem); letter-spacing:.08em; }
+    /* hero */
+    .hero { display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .hero h1 { font-size: clamp(3rem,8vw,6rem); letter-spacing:.1em; font-weight:800; text-transform:uppercase; }
+    .hero .sub {
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 400;
+      font-size: clamp(.9rem,2vw,1.2rem);
+      margin-top: 1rem;
+    }
+    /* story */
+    .story-content { 
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 10vh 10vw 20vh 10vw;
+      cursor: auto;
+      overflow-y: auto;
+    }
+    .story-text {
+      font-family: 'Roboto Mono', monospace;
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--fg);
+      max-width: 800px;
+      text-align: left;
+      position: relative;
+    }
+    .story-text .typed-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.2em;
+      background-color: var(--accent);
+      margin-left: 2px;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+    .story-text .word {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+    }
+    .story-text .word.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .story-text .paragraph {
+      margin-bottom: 2rem;
+    }
+    .story-text .paragraph:last-child {
+      margin-bottom: 0;
+    }
+    /* gallery */
+    .panel.gallery {
+      background: #fff !important;
+      color: #000 !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gallery-grid {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      gap: 40px;
+    }
+    .img-tile {
+      opacity: 1;
+      background: transparent;
+      box-shadow: none;
+      border: none;
+      width: auto;
+      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .img-tile img {
+      max-width: 80vw;
+      max-height: 80vh;
+      width: auto;
+      height: auto;
+      background: transparent;
+      display: block;
+    }
+    /* contact */
+    .contact { 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: .8rem; 
+    }
+    .contact a {
+      color: var(--fg);
+      text-decoration: none;
+      transition: color .3s ease;
+    }
+    .contact a:hover {
+      color: var(--accent);
+    }
+    /* music button and dropdown */
+    .music-button {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      width: 12px;
+      height: 12px;
+      background: #0ABAB5;
+      border-radius: 50%;
+      z-index: 9000;
+      cursor: pointer;
+      transition: transform .3s ease;
+    }
+    .music-button:hover {
+      transform: scale(1.5);
+    }
+    .music-dropdown {
+      position: absolute;
+      top: 4rem;
+      right: 2rem;
+      background: rgba(0,0,0,.8);
+      backdrop-filter: blur(8px);
+      border-radius: 12px;
+      padding: 1rem;
+      display: none;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 8000;
+      min-width: 200px;
+    }
+    .music-dropdown.open {
+      display: flex;
+    }
+    .music-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--accent);
+      text-decoration: none;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: background .3s ease;
+      font-size: 0.9rem;
+    }
+    .music-dropdown a:hover {
+      background: rgba(10, 186, 181, 0.1);
+    }
+    .music-dropdown .music-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--accent);
+    }
+    /* visibility */
+    .visible { opacity:1!important; transform:none!important; }
+    @media (prefers-reduced-motion:reduce) { * { transition:none!important; } }
+    img {
+      -webkit-user-drag: none;
+      user-drag: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    .gallery-grid img {
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="cursor" class="cursor"></div>
+  <div id="menu-trigger"></div>
+  <nav id="menu">
+    <a href="#video">Language</a>
+    <a href="#omw">OMW</a>
+    <a href="#hero">Home</a>
+    <a href="#story">Story</a>
+    <a href="#gallery">Play Book</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <div class="site-wrapper" id="site">
+    <!-- Hero Panel -->
+    <section class="panel hero" id="hero">
+      <h1>Project Tiffany</h1>
+      <div class="sub">dive into the story</div>
+    </section>
+
+        <!-- Full-Screen Video Panel -->
+    <section class="panel video" id="video">
+      <video id="langVid" muted autoplay loop playsinline preload="auto" poster="BA87C280-FCB0-4150-9AAD-0FC67E9318E1_4_5005_c.jpeg">
+        <source src="language.mp4" type="video/mp4">
+        <source src="language.webm" type="video/webm">
+        <source src="language.ogv" type="video/ogg">
+      
+      </video>
+      <div class="overlay">
+        <!-- <h2>Use Header when you need it</h2> -->
+      </div>
+      <div class="music-button" id="music-button"></div>
+      <div class="music-dropdown" id="music-dropdown">
+        <a href="https://open.spotify.com/album/0gmZf0FtzniTYgrL3pilwI?si=jV-SGopMS_-jXWdRr3IWMQ" target="_blank">
+          <svg class="music-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+          </svg>
+          <span>Spotify</span>
+        </a>
+        <a href="https://music.apple.com/us/song/language/1822332788" target="_blank">
+          <svg class="music-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+          </svg>
+          <span>Apple Music</span>
+        </a>
+        <a href="https://www.amazon.com/music/player/artists/B09KVFZXH9/tiffany-collins" target="_blank">
+          <svg class="music-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.5 0C5.6 0 0 5.6 0 12.5S5.6 25 12.5 25 25 19.4 25 12.5 19.4 0 12.5 0zm0 2.5c5.5 0 10 4.5 10 10s-4.5 10-10 10-10-4.5-10-10 4.5-10 10-10zm-2.5 7.5c-.8 0-1.5.7-1.5 1.5v7.5c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5V11.5c0-.8-.7-1.5-1.5-1.5zm5 0c-.8 0-1.5.7-1.5 1.5v7.5c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5V11.5c0-.8-.7-1.5-1.5-1.5z"/>
+          </svg>
+          <span>Amazon Music</span>
+        </a>
+        <a href="https://www.youtube.com/playlist?list=OLAK5uy_kMRqxpJYNXSusJpbtcdgxMRY-TGB6Fals" target="_blank">
+          <svg class="music-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          <span>YouTube</span>
+        </a>
+        </div>
+    </section>
+
+    <!-- OMW Video Panel -->
+    <section class="panel video" id="omw">
+      <video id="omwVid" muted autoplay loop playsinline preload="metadata" controls>
+        <source src="omw.mov" type="video/quicktime">
+        <source src="omw.mov" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="overlay">
+        <!-- <h2>Use Header when you need it</h2> -->
+      </div>
+      <div class="music-button" id="omw-music-button"></div>
+      <div class="music-dropdown" id="omw-music-dropdown">
+        <a href="#" target="_blank">
+          <svg class="music-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+          </svg>
+          <span>Spotify</span>
+        </a>
+        <a href="#" target="_blank">
+          <svg class="music-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+          </svg>
+          <span>Apple Music</span>
+        </a>
+        <a href="#" target="_blank">
+          <svg class="music-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.5 0C5.6 0 0 5.6 0 12.5S5.6 25 12.5 25 25 19.4 25 12.5 19.4 0 12.5 0zm0 2.5c5.5 0 10 4.5 10 10s-4.5 10-10 10-10-4.5-10-10 4.5-10 10-10zm-2.5 7.5c-.8 0-1.5.7-1.5 1.5v7.5c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5V11.5c0-.8-.7-1.5-1.5-1.5zm5 0c-.8 0-1.5.7-1.5 1.5v7.5c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5V11.5c0-.8-.7-1.5-1.5-1.5z"/>
+          </svg>
+          <span>Amazon Music</span>
+        </a>
+        <a href="#" target="_blank">
+          <svg class="music-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          <span>YouTube</span>
+        </a>
+        </div>
+    </section>
+
+    <!-- Story Panel -->
+    <section class="panel story" id="story">
+      <div class="story-content">
+        <div class="story-text" id="story-text">
+          <!-- Placeholder text - replace with content from TRUST YOURSELF.docx -->
+          <div class="paragraph">
+            <span class="word">That's</span>
+            <span class="word">the</span>
+            <span class="word">power</span>
+            <span class="word">of</span>
+            <span class="word">cinema!</span>
+            <span class="word">We're</span>
+            <span class="word">off</span>
+            <span class="word">the</span>
+            <span class="word">rails</span>
+            <span class="word">here</span>
+            <span class="word">wondering</span>
+            <span class="word">where</span>
+            <span class="word">time</span>
+            <span class="word">went.</span>
+            <span class="word">The</span>
+            <span class="word">sun</span>
+            <span class="word">is</span>
+            <span class="word">setting</span>
+            <span class="word">way</span>
+            <span class="word">sooner</span>
+            <span class="word">than</span>
+            <span class="word">expected</span>
+            <span class="word">and</span>
+            <span class="word">we</span>
+            <span class="word">don't</span>
+            <span class="word">have</span>
+            <span class="word">it</span>
+            <span class="word">in</span>
+            <span class="word">the</span>
+            <span class="word">budget</span>
+            <span class="word">to</span>
+            <span class="word">move</span>
+            <span class="word">the</span>
+            <span class="word">scene</span>
+            <span class="word">to</span>
+            <span class="word">a</span>
+            <span class="word">studio.</span>
+          </div>
+          <div class="paragraph">
+            <span class="word">Life</span>
+            <span class="word">doesn't</span>
+            <span class="word">play</span>
+            <span class="word">itself</span>
+            <span class="word">out</span>
+            <span class="word">in</span>
+            <span class="word">a</span>
+            <span class="word">series</span>
+            <span class="word">of</span>
+            <span class="word">scenes</span>
+            <span class="word">as</span>
+            <span class="word">a</span>
+            <span class="word">perfect</span>
+            <span class="word">narrative.</span>
+          </div>
+          <div class="paragraph">
+            <span class="word">History</span>
+            <span class="word">is</span>
+            <span class="word">a</span>
+            <span class="word">lousy</span>
+            <span class="word">filmmaker;</span>
+            <span class="word">it</span>
+            <span class="word">doesn't</span>
+            <span class="word">give</span>
+            <span class="word">you</span>
+            <span class="word">all</span>
+            <span class="word">the</span>
+            <span class="word">ingredients</span>
+            <span class="word">you</span>
+            <span class="word">need.</span>
+          </div>
+          <div class="paragraph">
+            <span class="word">What's</span>
+            <span class="word">your</span>
+            <span class="word">genre?</span>
+            <span class="word">Do</span>
+            <span class="word">I</span>
+            <span class="word">need</span>
+            <span class="word">one?</span>
+          </div>
+          <div class="paragraph">
+            <span class="word">A</span>
+            <span class="word">notch</span>
+            <span class="word">above</span>
+            <span class="word">reality.</span>
+          </div>
+          <div class="paragraph">
+            <span class="word">Linear</span>
+            <span class="word">narrative...</span>
+            <span class="word">will</span>
+            <span class="word">it</span>
+            <span class="word">ever</span>
+            <span class="word">get</span>
+            <span class="word">old?</span>
+          </div>
+          <div class="paragraph">
+            <span class="word"><b>Screenplays</b></span>
+            <span class="word">Apocalypse</span>
+            <span class="word">Now</span>
+            <span class="word">The</span>
+            <span class="word">Social</span>
+            <span class="word">Network</span>
+            <span class="word">Moonlight</span>
+            <span class="word">Rosemary's</span>
+            <span class="word">Baby</span>
+          </div>
+          <div class="paragraph">
+            <span class="word">Marktwain</span>
+            <span class="word">mrlutherkingjr</span>
+            <span class="word">thomasjefferson</span>
+            <span class="word">Wernerherzog</span>
+            <span class="word">terrygilliam</span>
+            <span class="word">federicofellini</span>
+            <span class="word">Johnhughes</span> 
+            <span class="word">hollyhunter</span> 
+            <span class="word">stanelykubrick</span> 
+            <span class="word">Alfredhitchock</span> 
+            <span class="word">spikelee</span> 
+            <span class="word">QuentinTarantino</span> 
+            <span class="word">stevemartin</span> 
+            <span class="word">Winstonchurchill</span> 
+            <span class="word">williamshakespeare</span> 
+            <span class="word">napoleonbonaparte</span> 
+            <span class="word">Christophernolan</span> 
+          </div>
+          <div class="paragraph">
+            <span class="word">Intention</span>
+            <span class="word">and</span>
+            <span class="word">obstacle</span>
+            <span class="word">=</span>
+            <span class="word">drive</span>
+            <span class="word">shaft</span>
+            <span class="word">of</span>
+            <span class="word">a</span>
+            <span class="word">car.</span>
+            <span class="word">Grow</span>
+            <span class="word">your</span>
+            <span class="word">talent</span>
+            <span class="word">tell</span>
+            <span class="word">the</span>
+            <span class="word">story</span>
+            <span class="word">only</span>
+            <span class="word">you</span>
+            <span class="word">can</span>
+            <span class="word">tell.</span>
+          </div>
+          <div class="paragraph">
+            <span class="word">Carve</span>
+            <span class="word">the</span>
+            <span class="word">story</span>
+            <span class="word">like</span>
+            <span class="word">a</span>
+            <span class="word">sculpture.</span>
+            <span class="word">Just</span>
+            <span class="word">get</span>
+            <span class="word">to</span>
+            <span class="word">the</span>
+            <span class="word">end</span>
+            <span class="word">and</span>
+            <span class="word">then</span>
+            <span class="word">go</span>
+            <span class="word">through</span>
+            <span class="word">it</span>
+            <span class="word">again.</span>
+          </div>
+          <div class="paragraph">
+            <span class="word">Follow</span>
+            <span class="word">the</span>
+            <span class="word">fun.</span>
+            <span class="word">If</span>
+            <span class="word">you're</span>
+            <span class="word">not</span>
+            <span class="word">having</span>
+            <span class="word">fun,</span>
+            <span class="word">you're</span>
+            <span class="word">doing</span>
+            <span class="word">it</span>
+            <span class="word">wrong.</span>
+          </div>
+          <span class="typed-cursor"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Playbook Gallery Panel -->
+    <section class="panel gallery" id="gallery">
+      <div class="gallery-grid">
+        <div class="img-tile"><img src="foryou-art-1.gif" alt="For You Art"></div>
+        
+        <div class="img-tile"><img src="foryou-art-3.gif" alt="For You Art"></div>
+        <div class="img-tile"><img src="foryou-art-4.gif" alt="For You Art"></div>
+      </div>
+    </section>
+
+    <!-- Contact Panel -->
+    <section class="panel contact" id="contact">
+      © Project Tiffany • 
+      <a href="ttps://www.instagram.com/tiff_ishh?igsh=bG85cG1vaDBhcGN2&utm_source=qr" target="_blank">IG</a> • 
+      <a href="mailto:projecttiffanyco@gmail.com">Say Hi</a>
+    </section>
+  </div>
+
+  <script>
+    // Cursor Tracking
+    const cursor = document.getElementById('cursor');
+    window.addEventListener('mousemove', e => { cursor.style.top = e.clientY + 'px'; cursor.style.left = e.clientX + 'px'; });
+    document.querySelectorAll('a, .img-tile, #menu-trigger').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+
+    // Menu Toggle & Navigation
+    const trigger = document.getElementById('menu-trigger'), menu = document.getElementById('menu');
+    trigger.addEventListener('click', () => menu.classList.toggle('open'));
+    document.querySelectorAll('nav#menu a').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const href = a.getAttribute('href');
+        const targetSection = document.querySelector(href);
+        
+        console.log('Navigation clicked:', href);
+        console.log('Target section found:', !!targetSection);
+        
+        if (targetSection) {
+          // Temporarily disable scroll snap for smooth navigation
+          const site = document.getElementById('site');
+          const originalScrollSnap = site.style.scrollSnapType;
+          site.style.scrollSnapType = 'none';
+          
+          targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          
+          // Re-enable scroll snap after navigation
+          setTimeout(() => {
+            site.style.scrollSnapType = originalScrollSnap || 'y mandatory';
+          }, 1000);
+        } else {
+          console.error('Target section not found for:', href);
+        }
+        menu.classList.remove('open');
+      });
+    });
+
+    // Vertical Scroll Handler
+    const site = document.getElementById('site');
+    window.addEventListener('wheel', e => {
+      if (e.target.closest('.gallery-grid')) return;
+      if (e.target.closest('.story-content')) {
+        // Allow vertical scrolling within story content
+        return;
+      }
+      // Let the browser handle vertical scrolling naturally
+    }, { passive: true });
+
+    // Typewriter effect for Story page
+    function startTypewriter() {
+      const storyText = document.getElementById('story-text');
+      if (!storyText) return;
+      
+      const words = storyText.querySelectorAll('.word');
+      let currentWordIndex = 0;
+      
+      function typeNextWord() {
+        if (currentWordIndex < words.length) {
+          words[currentWordIndex].classList.add('visible');
+          
+          // Auto-scroll to keep the current word visible
+          const currentWord = words[currentWordIndex];
+          if (currentWord) {
+            currentWord.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'center',
+              inline: 'nearest'
+            });
+          }
+          
+          currentWordIndex++;
+          setTimeout(typeNextWord, 150); // Adjust speed here (150ms between words)
+        }
+      }
+      
+      // Start typing when the story section is visible
+      const storyObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            typeNextWord();
+            storyObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      
+      storyObserver.observe(document.getElementById('story'));
+    }
+    
+    // Initialize typewriter effect
+    startTypewriter();
+    
+    // Intersection Observer for Reveal
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
+      });
+    }, { root: site, threshold: 0.2 });
+    document.querySelectorAll('.img-tile').forEach(el => observer.observe(el));
+
+    // Autoplay Fallback
+    const langVid = document.getElementById('langVid');
+    langVid.play().catch(() => {
+      // Try again after metadata loads
+      langVid.addEventListener('loadedmetadata', () => langVid.play().catch(console.warn));
+    });
+    
+    const omwVid = document.getElementById('omwVid');
+    omwVid.play().catch(() => {
+      // Try again after metadata loads
+      omwVid.addEventListener('loadedmetadata', () => omwVid.play().catch(console.warn));
+    });
+
+    // Change menu-trigger dot color based on visible panel
+    function updateMenuTriggerColor() {
+      const menuTrigger = document.getElementById('menu-trigger');
+      // Find the topmost fully visible panel
+      const panels = document.querySelectorAll('.panel');
+      let activePanel = null;
+      const siteRect = document.getElementById('site').getBoundingClientRect();
+      panels.forEach(panel => {
+        const rect = panel.getBoundingClientRect();
+        // Check if the panel is fully in view (top edge at or near site top)
+        if (Math.abs(rect.top - siteRect.top) < 2) {
+          activePanel = panel;
+        }
+      });
+      if (activePanel && activePanel.classList.contains('gallery')) {
+        menuTrigger.style.background = '#000';
+      } else {
+        menuTrigger.style.background = '#fff';
+      }
+    }
+    // Listen for scroll and on load
+    document.getElementById('site').addEventListener('scroll', updateMenuTriggerColor);
+    window.addEventListener('DOMContentLoaded', updateMenuTriggerColor);
+    window.addEventListener('resize', updateMenuTriggerColor);
+
+    // Music button and dropdown functionality
+    const musicButton = document.getElementById('music-button');
+    const musicDropdown = document.getElementById('music-dropdown');
+    
+    musicButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      musicDropdown.classList.toggle('open');
+    });
+    
+    // OMW Music button and dropdown functionality
+    const omwMusicButton = document.getElementById('omw-music-button');
+    const omwMusicDropdown = document.getElementById('omw-music-dropdown');
+    
+    omwMusicButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      omwMusicDropdown.classList.toggle('open');
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!musicButton.contains(e.target) && !musicDropdown.contains(e.target)) {
+        musicDropdown.classList.remove('open');
+      }
+      if (!omwMusicButton.contains(e.target) && !omwMusicDropdown.contains(e.target)) {
+        omwMusicDropdown.classList.remove('open');
+      }
+    });
+    
+    // Add cursor hover effect for music buttons
+    musicButton.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    musicButton.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    omwMusicButton.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    omwMusicButton.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+
+    // Disable right-click context menu on all images
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('contextmenu', e => e.preventDefault());
+      });
+    });
+
+    // Add aria-hidden to all images for further restriction (optional, disables screen reader access)
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('img').forEach(img => {
+        img.setAttribute('aria-hidden', 'true');
+      });
+    });
+  </script>
+</body>
+</html>
