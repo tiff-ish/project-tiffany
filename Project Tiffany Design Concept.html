@@ -304,6 +304,89 @@
       #menu-trigger:hover { transform: none; }
       #menu-trigger:active { transform: scale(2); }
     }
+
+    /* TB;DR Panel */
+    .panel.tbdr {
+      background: var(--bg);
+      color: var(--fg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10vh 5vw;
+    }
+    .tbdr-content {
+      max-width: 1200px;
+      width: 100%;
+      text-align: left;
+    }
+    .tbdr-header {
+      margin-bottom: 5vh;
+      text-align: center;
+    }
+    .tbdr-header h2 {
+      font-size: clamp(2rem, 6vw, 4rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+    .tbdr-header .sub {
+      font-size: clamp(0.8rem, 2vw, 1.1rem);
+      letter-spacing: .08em;
+      margin-top: 0.5rem;
+    }
+    .recommendations-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+    .rec-category h3 {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .rec-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .rec-item {
+      background: var(--ghost);
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid var(--fg);
+      transition: all 0.3s ease;
+    }
+    .rec-item:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      transform: translateY(-5px);
+    }
+    .rec-title {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-weight: 600;
+      color: var(--fg);
+      margin-bottom: 5px;
+    }
+    .rec-year {
+      font-size: clamp(0.7rem, 1.5vw, 1rem);
+      color: var(--fg);
+      opacity: 0.7;
+      margin-bottom: 5px;
+    }
+    .rec-desc {
+      font-size: clamp(0.8rem, 1.8vw, 1rem);
+      line-height: 1.6;
+      color: var(--fg);
+      opacity: 0.8;
+    }
+    .rec-author {
+      font-size: clamp(0.7rem, 1.5vw, 1rem);
+      color: var(--fg);
+      opacity: 0.7;
+      margin-top: 5px;
+    }
   </style>
 </head>
 <body>
@@ -315,6 +398,7 @@
     <a href="#hero">Home</a>
     <a href="#story">Story</a>
     <a href="#gallery">Play Book</a>
+    <a href="#tbdr">TB;DR</a>
     <a href="#contact">Contact</a>
   </nav>
 
@@ -575,6 +659,122 @@
         <div class="img-tile"><img src="foryou-art-1.gif" alt="For You Art"></div>
         <div class="img-tile"><img src="foryou-art-3.gif" alt="For You Art"></div>
         <div class="img-tile"><img src="foryou-art-4.gif" alt="For You Art"></div>
+      </div>
+    </section>
+
+    <!-- TB;DR Panel -->
+    <section class="panel tbdr" id="tbdr">
+      <div class="tbdr-content">
+        <div class="tbdr-header">
+          <h2>TB;DR</h2>
+          <div class="sub">too blah didn't read</div>
+        </div>
+        <div class="recommendations-grid">
+          <!-- Movies Section -->
+          <div class="rec-category">
+            <h3>Cinema</h3>
+            <div class="rec-list">
+              <div class="rec-item">
+                <span class="rec-title">The Cook, The Thief, His Wife & Her Lover</span>
+                <span class="rec-year">1989</span>
+                <span class="rec-desc">Peter Greenaway's operatic revenge tale. Every frame is a painting.</span>
+              </div>
+              <div class="rec-item">
+                <span class="rec-title">Stalker</span>
+                <span class="rec-year">1979</span>
+                <span class="rec-desc">Tarkovsky's Zone. Philosophy as cinema. Time becomes liquid.</span>
+              </div>
+              <div class="rec-item">
+                <span class="rec-title">The Long Goodbye</span>
+                <span class="rec-year">1973</span>
+                <span class="rec-desc">Altman's LA noir. Elliott Gould's Marlowe is pure poetry.</span>
+              </div>
+              <div class="rec-item">
+                <span class="rec-title">The Conformist</span>
+                <span class="rec-year">1970</span>
+                <span class="rec-desc">Bertolucci's fascist masterpiece. Every shadow tells a story.</span>
+              </div>
+            </div>
+          </div>
+          <!-- Books Section -->
+          <div class="rec-category">
+            <h3>Literature</h3>
+            <div class="rec-list">
+              <div class="rec-item">
+                <span class="rec-title">The Recognitions</span>
+                <span class="rec-author">William Gaddis</span>
+                <span class="rec-desc">Forgery as art. The great American novel you've never read.</span>
+              </div>
+              <div class="rec-item">
+                <span class="rec-title">2666</span>
+                <span class="rec-author">Roberto Bolaño</span>
+                <span class="rec-desc">The Part About the Crimes. Literature as autopsy.</span>
+              </div>
+              <div class="rec-item">
+                <span class="rec-title">Gravity's Rainbow</span>
+                <span class="rec-author">Thomas Pynchon</span>
+                <span class="rec-desc">Paranoia as physics. The rocket's arc is your destiny.</span>
+              </div>
+              <div class="rec-item">
+                <span class="rec-title">The Tunnel</span>
+                <span class="rec-author">Ernesto Sabato</span>
+                <span class="rec-desc">Existential noir. Love as pathology. Argentina's underground.</span>
+              </div>
+            </div>
+          </div>
+          <!-- Articles Section -->
+          <div class="rec-category">
+            <h3>Essays</h3>
+            <div class="rec-list">
+              <div class="rec-item">
+                <span class="rec-title">The Work of Art in the Age of Mechanical Reproduction</span>
+                <span class="rec-author">Walter Benjamin</span>
+                <span class="rec-desc">Aura lost, politics gained. The essay that changed everything.</span>
+              </div>
+              <div class="rec-item">
+                <span class="rec-title">Consider the Lobster</span>
+                <span class="rec-author">David Foster Wallace</span>
+                <span class="rec-desc">Maine's state fair. Ethics on a paper plate. Infinite jest's shadow.</span>
+              </div>
+              <div class="rec-item">
+                <span class="rec-title">The Death of the Author</span>
+                <span class="rec-author">Roland Barthes</span>
+                <span class="rec-desc">Text over author. Reader as writer. Postmodernism's birth.</span>
+              </div>
+              <div class="rec-item">
+                <span class="rec-title">A Supposedly Fun Thing I'll Never Do Again</span>
+                <span class="rec-author">David Foster Wallace</span>
+                <span class="rec-desc">Cruise ship as metaphor. American excess. Infinite boredom.</span>
+              </div>
+            </div>
+          </div>
+          <!-- Music Section -->
+          <div class="rec-category">
+            <h3>Sound</h3>
+            <div class="rec-list">
+              <div class="rec-item">
+                <span class="rec-title">Spirit of Eden</span>
+                <span class="rec-author">Talk Talk</span>
+                <span class="rec-desc">Post-rock before post-rock. Ambient gospel. Mark Hollis's swan song.</span>
+              </div>
+              <div class="rec-item">
+                <span class="rec-title">Loveless</span>
+                <span class="rec-author">My Bloody Valentine</span>
+                <span class="rec-desc">Guitar as texture. Shoegaze's peak. Kevin Shields's wall of sound.</span>
+              </div>
+              <div class="rec-item">
+                <span class="rec-title">Selected Ambient Works 85-92</span>
+                <span class="rec-author">Aphex Twin</span>
+                <span class="rec-desc">Electronic pastoral. IDM's blueprint. Richard D. James's mind.</span>
+              </div>
+              <div class="rec-item">
+                <span class="rec-title">In the Aeroplane Over the Sea</span>
+                <span class="rec-author">Neutral Milk Hotel</span>
+                <span class="rec-desc">Anne Frank as muse. Folk surrealism. Jeff Mangum's dream.</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
