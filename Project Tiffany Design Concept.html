@@ -33,6 +33,12 @@
     /* cursor */
     .cursor { position: fixed; top: 0; left: 0; width: 10px; height: 10px; border: 1px solid var(--fg); border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); transition: .15s ease; z-index: 10000; }
     .cursor.hover { width: 40px; height: 40px; border-color: var(--accent); }
+    .cursor.snap {
+      width: 40px;
+      height: 40px;
+      border-color: var(--accent);
+      transition: all 0.25s cubic-bezier(.4,1.6,.6,1);
+    }
     
     /* menu */
     #menu-trigger { position: fixed; top: 2rem; left: 2rem; width: 8px; height: 8px; background: var(--fg); border-radius: 50%; z-index: 9000; cursor: pointer; transition: transform .3s ease; }
@@ -791,12 +797,26 @@
     const cursor = document.getElementById('cursor');
     if (window.innerWidth > 768) {
       window.addEventListener('mousemove', e => { 
-        cursor.style.top = e.clientY + 'px'; 
-        cursor.style.left = e.clientX + 'px'; 
+        if (!cursor.classList.contains('snap')) {
+          cursor.style.top = e.clientY + 'px'; 
+          cursor.style.left = e.clientX + 'px'; 
+        }
       });
       document.querySelectorAll('a, .img-tile, #menu-trigger').forEach(el => {
         el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
         el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+      });
+
+      // Snap cursor to menu dot
+      const menuTrigger = document.getElementById('menu-trigger');
+      menuTrigger.addEventListener('mouseenter', () => {
+        const rect = menuTrigger.getBoundingClientRect();
+        cursor.classList.add('snap');
+        cursor.style.top = (rect.top + rect.height / 2) + 'px';
+        cursor.style.left = (rect.left + rect.width / 2) + 'px';
+      });
+      menuTrigger.addEventListener('mouseleave', () => {
+        cursor.classList.remove('snap');
       });
     }
 
