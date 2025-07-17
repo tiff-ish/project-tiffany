@@ -346,6 +346,19 @@
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 30px;
     }
+    /* Mobile-specific improvements */
+    @media (max-width: 768px) {
+      .recommendations-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .tbdr-content {
+        padding: 0 20px;
+      }
+      .rec-item {
+        padding: 12px;
+      }
+    }
     .rec-category h3 {
       font-size: clamp(1.5rem, 4vw, 2.5rem);
       font-weight: 700;
@@ -668,7 +681,7 @@
         <div class="recommendations-grid">
           <!-- Movies Section -->
           <div class="rec-category">
-            <h3>Tiff's Obscure <br>Movie List</h3></br></h3></div></div></div>
+            <h3>Tiff's Obscure <br>Movie List</h3>
             <div class="rec-list">
               <div class="rec-item">
                 <span class="rec-title">The Piano Teacher (La Pianiste)</span>
