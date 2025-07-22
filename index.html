@@ -32,7 +32,7 @@
     video { filter: grayscale(100%); }
     
     /* cursor */
-    .cursor { position: fixed; top: 0; left: 0; width: 10px; height: 10px; border: 1px solid var(--fg); border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); transition: .15s ease; z-index: 10000; }
+    .cursor { position: fixed; top: 0; left: 0; width: 10px; height: 10px; border: 2px solid var(--fg); border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); transition: .15s ease; z-index: 10000; box-shadow: 0 0 0 2px var(--accent); }
     .cursor.hover { width: 40px; height: 40px; border-color: var(--accent); }
     .cursor.snap {
       width: 40px;
@@ -201,6 +201,7 @@
       height: auto;
       background: transparent;
       display: block;
+      margin: 0 auto;
     }
     
     /* Mobile gallery adjustments */
@@ -423,7 +424,7 @@
 
   <div class="site-wrapper" id="site">
     <!-- Hero Panel -->
-    <section class="panel hero" id="hero">
+    <section class="panel hero" id="home">
       <h1>Project Tiffany</h1>
       <div class="sub">dive into the story</div>
     </section>
@@ -458,7 +459,7 @@
     </section>
 
     <!-- Story Panel -->
-    <section class="panel story" id="story">
+    <section class="panel story" id="about">
       <div class="story-content">
         <div class="story-text" id="story-text">
           <div class="paragraph">
@@ -665,14 +666,14 @@
     <!-- Playbook Gallery Panel -->
     <section class="panel gallery" id="gallery">
       <div class="gallery-grid">
-        <div class="img-tile"><img src="foryou-art-1-optimized.gif" alt="For You Art #1: (c) 2025 Tiffany Collins. Animated digital collage exploring perception and digital media."></div>
-        <div class="img-tile"><img src="foryou-art-3-optimized.gif" alt="For You Art #3: (c) 2025 Tiffany Collins. Animated digital collage challenging traditional narrative through looping motion."></div>
-        <div class="img-tile"><img src="foryou-art-4-optimized.gif" alt="For You Art #4: (c) 2025 Tiffany Collins. Animated digital collage reflecting on memory and repetition in contemporary art."></div>
+        <div class="img-tile"><img src="foryou-art-1.gif" alt="For You Art #1: (c) 2025 Tiffany Collins. Animated digital collage exploring perception and digital media."></div>
+        <div class="img-tile"><img src="foryou-art-3.gif" alt="For You Art #3: (c) 2025 Tiffany Collins. Animated digital collage challenging traditional narrative through looping motion."></div>
+        <div class="img-tile"><img src="foryou-art-4.gif" alt="For You Art #4: (c) 2025 Tiffany Collins. Animated digital collage reflecting on memory and repetition in contemporary art."></div>
       </div>
     </section>
 
     <!-- TB;DR Panel -->
-    <section class="panel tbdr" id="tbdr">
+    <section class="panel tbdr" id="blog">
       <div class="tbdr-content">
         <div class="tbdr-header">
           <h2>TB;DR</h2>
@@ -859,20 +860,26 @@
   }
   </script>
   <script>
-    // Cursor Tracking (only on desktop)
+    // Robust Cursor Tracking (only on desktop)
     const cursor = document.getElementById('cursor');
     if (window.innerWidth > 768) {
-      window.addEventListener('mousemove', e => { 
-        if (!cursor.classList.contains('snap')) {
-          cursor.style.top = e.clientY + 'px'; 
-          cursor.style.left = e.clientX + 'px'; 
-        }
+      window.addEventListener('mousemove', e => {
+        cursor.style.top = e.clientY + 'px';
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.opacity = 1;
       });
+      // Reset cursor if mouse leaves window
+      window.addEventListener('mouseout', () => {
+        cursor.style.opacity = 0;
+      });
+      window.addEventListener('mouseover', () => {
+        cursor.style.opacity = 1;
+      });
+      // Add hover effect for all interactive elements
       document.querySelectorAll('a, .img-tile, #menu-trigger').forEach(el => {
         el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
         el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
       });
-
       // Snap cursor to menu dot
       const menuTrigger = document.getElementById('menu-trigger');
       menuTrigger.addEventListener('mouseenter', () => {
@@ -954,7 +961,7 @@
       }
 
       // Start typing when the story section is visible
-      const storySection = document.getElementById('story');
+      const storySection = document.getElementById('about');
       const storyObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting && typing) {
