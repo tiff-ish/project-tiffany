@@ -378,6 +378,9 @@
       border-radius: 10px;
       border: 1px solid var(--fg);
       transition: all 0.3s ease;
+      text-decoration: none;
+      display: block;
+      cursor: pointer;
     }
     .rec-item:hover {
       background: var(--accent);
@@ -630,10 +633,10 @@
           <div class="paragraph">
             <span class="word">This</span>
             <span class="word">is</span>
-            <span class="word">meant</span>
+            <span class="word">for you</span>
             <span class="word">to</span>
             <span class="word">read</span>
-            <span class="word">avant-garde.</span>
+            <span class="word">as immersive.</span>
             <span class="word">Those</span>
             <span class="word">who</span>
             <span class="word">don't</span>
@@ -684,52 +687,52 @@
           <div class="rec-category">
             <h3>Tiff's Obscure <br>Movie List</h3>
             <div class="rec-list">
-              <div class="rec-item">
+              <a href="https://www.imdb.com/title/tt0254686/" target="_blank" class="rec-item">
                 <span class="rec-title">The Piano Teacher (La Pianiste)</span>
                 <span class="rec-year">2001</span>
                 <span class="rec-desc">From Funny Games, Michael Haneke's twisted mind. The most gut-wrenching movie. Makes Black Swan look like a Disney movie.</span>
-              </div>
-              <div class="rec-item">
+              </a>
+              <a href="https://www.rottentomatoes.com/m/neptune_frost" target="_blank" class="rec-item">
                 <span class="rec-title">Neptune Frost</span>
                 <span class="rec-year">2021</span>
-                <span class="rec-desc">An afrofuturist sci-fi film by Saul Willams. The lasting tinge of the idealist within me wishes American cinema embraced African movies.</span>
-              </div>
-              <div class="rec-item">
+                <span class="rec-desc">An afrofuturist sci-fi film by Saul Willams. It also has a great soundtrack.</span>
+              </a>
+              <a href="https://a24films.com/films/problemista" target="_blank" class="rec-item">
                 <span class="rec-title">Problemista</span>
                 <span class="rec-year">2023</span>
                 <span class="rec-desc">Torre's masterpeice. Strong visual identity that's lightyears ahead of its time. Julio can do no wrong in my book.</span>
-              </div>
-              <div class="rec-item">
+              </a>
+              <a href="https://www.imdb.com/title/tt0390384/" target="_blank" class="rec-item">
                 <span class="rec-title">Primer</span>
                 <span class="rec-year">2004</span>
-                <span class="rec-desc">Shane Carruth is an engineer turned filmmaker. A very clever story that's intentionally made to confuse your understanding of time travel.</span>
-              </div>
+                <span class="rec-desc">Shane Carruth is an engineer turned filmmaker. A very clever story that's intentionally made to confuse your understanding of time travel. Go through the Reddit rabbit hole after you watch.</span>
+              </a>
             </div>
           </div>
           <!-- Books Section -->
           <div class="rec-category">
             <h3>Literature</h3>
             <div class="rec-list">
-              <div class="rec-item">
+              <a href="https://www.amazon.com/Range-Generalists-Triumph-Specialized-World/dp/0735214484/" target="_blank" class="rec-item">
                 <span class="rec-title">Range</span>
                 <span class="rec-author">David Epstein</span>
                 <span class="rec-desc">Biased against the idea that we're all born with a certain set of skills. We're all capable of so much more.</span>
-              </div>
-              <div class="rec-item">
+              </a>
+              <a href="https://www.newyorktheatreguide.com/reviews/cost-of-living-broadway-review" target="_blank" class="rec-item">
                 <span class="rec-title">Cost of Living</span>
                 <span class="rec-author">Martyna Majok</span>
                 <span class="rec-desc">Beautifully written play. Though I confess the ending f*cked me up.</span>
-              </div>
-              <div class="rec-item">
+              </a>
+              <a href="https://zandoprojects.com/books/on-work-money-meaning-identity/" target="_blank" class="rec-item">
                 <span class="rec-title">On Work</span>
                 <span class="rec-author">Derek Thompson</span>
-                <span class="rec-desc">A remedy for the workaholic. Work has become like a religion, that's why we can't have nice things like work from home.</span>
-              </div>
-              <div class="rec-item">
+                <span class="rec-desc">A remedy for the workaholic. Got this for free when I was invited to attend The Atlantic Festival. Short but potent read.</span>
+              </a>
+              <a href="https://lithub.com/on-the-simple-prophecy-of-octavia-butlers-parable-of-the-sower/" target="_blank" class="rec-item">
                 <span class="rec-title">Parable of the Sower</span>
                 <span class="rec-author">Octavia Butler</span>
                 <span class="rec-desc">This sci-fi novel serves as a parable for the modern world. I'll always recommend this book.</span>
-              </div>
+              </a>
             </div>
           </div>
         </div>
@@ -758,7 +761,7 @@
     "@context": "https://schema.org",
     "@type": "WebPageElement",
     "name": "Home Panel",
-    "url": "https://projecttiffany.com/#home",
+    "url": "https://projecttiffany.com/home",
     "description": "Hero section welcoming visitors to Project Tiffany, an avant-garde art and storytelling experience.",
     "isPartOf": { "@id": "https://projecttiffany.com/" }
   }
@@ -768,7 +771,7 @@
     "@context": "https://schema.org",
     "@type": "WebPageElement",
     "name": "Story Panel",
-    "url": "https://projecttiffany.com/#about",
+    "url": "https://projecttiffany.com/about",
     "description": "Narrative-driven story section with typewriter effect, exploring the philosophy and process of avant-garde art and storytelling.",
     "isPartOf": { "@id": "https://projecttiffany.com/" }
   }
@@ -778,7 +781,7 @@
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "name": "Play Book Gallery",
-    "url": "https://projecttiffany.com/#gallery",
+    "url": "https://projecttiffany.com/gallery",
     "description": "Gallery of visual artworks and installations by Tiffany Collins, featuring experimental media and conceptual themes.",
     "hasPart": [
       {
@@ -814,7 +817,7 @@
     "@context": "https://schema.org",
     "@type": "WebPageElement",
     "name": "TB;DR Panel",
-    "url": "https://projecttiffany.com/#blog",
+    "url": "https://projecttiffany.com/blog",
     "description": "Recommendations and curated lists of movies and literature, reflecting the influences and inspirations behind Project Tiffany.",
     "isPartOf": { "@id": "https://projecttiffany.com/" }
   }
@@ -824,7 +827,7 @@
     "@context": "https://schema.org",
     "@type": "ContactPage",
     "name": "Contact Panel",
-    "url": "https://yourdomain.com/#contact",
+    "url": "https://projecttiffany.com/contact",
     "description": "Contact information and social links for Project Tiffany and artist Tiffany Collins.",
     "contactPoint": {
       "@type": "ContactPoint",
